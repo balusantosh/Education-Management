@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do | Lists</title>
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200&display=swap" rel="stylesheet">
+    <!-- font awesome -->
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    
+   
+    <style>
+        .header{
+            padding: 0 10rem;
+            margin: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo{
+            color: white;
+            font-size: 2.8rem;
+            font-weight: bold;
+        }
+        .profile{
+            text-decoration: none;
+            color: white;
+        }
+        .btn{
+            color: white;
+            background-color: rgb(255, 0, 0);
+            border-radius: 900px;
+            padding: .5rem 1rem;
+            margin-left: 1rem;
+        }
+        .btn:hover{
+            background-color: rgba(255, 0, 0, 0.74);
+        }
+        a{
+            text-decoration: none;
+            color: white;
+        }
+
+        body{
+            background-color: #143b55;
+            padding: 0;
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .container{
+            margin: 0 10rem;
+            padding: 2rem 5rem;
+            background-color: rgba(204, 204, 204, 0.397);
+            border-radius: 10px;
+            min-height: 70vh;
+        }
+        h1{
+            margin: 0;
+        }
+        .sub_header{
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .add_task{
+            padding: 0;
+            align-items: center;
+            text-align: center;
+            width: 3rem;
+            color: rgb(0, 0, 0);
+            background-color: rgba(204, 204, 204, 0.87);
+            border-radius: 100px;
+            font-size: 30px;
+        }
+        .add_task:hover{
+            background-color: rgb(255, 255, 255);
+            width: 7rem;
+            padding: .77rem;
+            margin-right: 0;
+            font-size: 12px;
+        }
+        .add_task:hover::after{
+            content:'ADD NEW TASK'
+        }
+        .item_complete{
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #09ff0042;
+            margin-top: .5rem;
+            border-radius: 10px;
+            padding: 0 .5rem;
+            color: white;
+        }
+        .item_incomplete{
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ff41417e;
+            margin-top: .5rem;
+            border-radius: 10px;
+            padding: 0 .5rem;
+            color: white;
+        }
+        h5{
+            margin-left: .3rem;
+            margin-top: .5rem;
+            margin-bottom: .4rem;
+        }
+        h3{
+            margin-bottom: 0;
+        }
+        .operations{
+            padding: .5rem .5rem;
+            color: rgb(0, 0, 0);
+            background-color: rgb(197, 197, 197);
+            border-radius: 100px;
+            margin-left: 1rem;
+            font-weight: bold;
+            font-size: small;
+        }
+        .operations:hover{
+            background-color: rgb(255, 255, 255);
+            color: rgb(0, 0, 0);
+        }
+        @media (max-width:650px){
+            .header{
+                padding: 0px;
+            }
+            .container{
+                margin: 1rem;
+            }
+        }
+        @media (max-width:400px){
+            .header{
+                margin: 1.5rem .5rem;
+            }
+            .container{
+                padding: 1rem;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+
+    <div class='header'>
+        <a href="{% url 'tasks' %}">
+            <h1 class="logo">TODO</h1>
+        </a>
+        <div class="profile-section">
+            {% if request.user.is_authenticated %}
+            <a href="#" class="profile">
+                {{ request.user|title }}
+            </a>
+            <a href="{% url 'logout' %}" class="btn">Logout</a>
+            {% else %}
+            <a href="{% url 'login' %}" class="btn">Login</a>
+            <a href="{% url 'register' %}" class="btn">Register</a>
+            {% endif %}
+        </div>
+    </div>
+    
+ 
+    <div class="container">
+    <!-- {% block content %} -->
+        <div class="sub_header">
+            <form method="GET">
+                <div class="search">
+                    <input type="text" name="search-area">
+                    <input type="submit" value="Search">
+                </div>
+            </form>
+            <a href="{% url 'task-create' %}" class="add_task">+</a>
+        </div>
+
+        
+
+        <div class="items">
+            <div>You have {{count}} incomplet task{{count|pluralize:"s"}}</div>
+            {% for task in tasks %}
+            <div>
+                {% if task.complete %}
+                <div class="item_complete">
+                    <div>
+                        <h3><a href="{% url 'task-update' task.id %}">{{task.title}}</a></h3>
+                        <h5>{{task.description}}</h5>
+                    </div>
+                    <div>
+                        <!-- <a href="{% url 'task-update' task.id %}" class="operations">Edit</a> -->
+                        <a href="{% url 'task-delete' task.id %}" class="operations">&#215;</a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="item_incomplete">
+                    <div>
+                        <h3><a href="{% url 'task-update' task.id %}">{{task.title}}</a></h3>
+                        <h5>{{task.description}}</h5>
+                    </div>
+                    <div>
+                        <!-- <a href="{% url 'task-update' task.id %}" class="operations">Edit</a> -->
+                        <a href="{% url 'task-delete' task.id %}" class="operations">&#215;</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% empty %}
+            <h4>No items in list</h4>
+            {% endfor %}
+        </div>
+    
+    <!-- {% endblock content %} -->
+    </div>
+    
+</body>
+</html>
