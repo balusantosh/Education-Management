@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To Do | Lists</title>
+    <title>Education Management | Home</title>
     <!-- google fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,7 +87,7 @@
             font-size: 12px;
         }
         .add_task:hover::after{
-            content:'ADD NEW TASK'
+            content:'ADD COMPLAINT'
         }
         .item_complete{
             display: flex;
@@ -105,7 +105,7 @@
             width: 100%;
             justify-content: space-between;
             align-items: center;
-            background-color: #ff41417e;
+            background-color: rgb(204, 204, 0, 0.7);
             margin-top: .5rem;
             border-radius: 10px;
             padding: 0 .5rem;
@@ -155,7 +155,7 @@
 
     <div class='header'>
         <a href="{% url 'tasks' %}">
-            <h1 class="logo">TODO</h1>
+            <h1 class="logo">Education Management</h1>
         </a>
         <div class="profile-section">
             {% if request.user.is_authenticated %}
@@ -186,32 +186,15 @@
         
 
         <div class="items">
-            <div>You have {{count}} incomplet task{{count|pluralize:"s"}}</div>
+            <div>Your Notifications</div>
             {% for task in tasks %}
             <div>
-                {% if task.complete %}
-                <div class="item_complete">
-                    <div>
-                        <h3><a href="{% url 'task-update' task.id %}">{{task.title}}</a></h3>
-                        <h5>{{task.description}}</h5>
-                    </div>
-                    <div>
-                        <!-- <a href="{% url 'task-update' task.id %}" class="operations">Edit</a> -->
-                        <a href="{% url 'task-delete' task.id %}" class="operations">&#215;</a>
-                    </div>
-                </div>
-                {% else %}
                 <div class="item_incomplete">
                     <div>
-                        <h3><a href="{% url 'task-update' task.id %}">{{task.title}}</a></h3>
+                        <h3>{{task.title}}</h3>
                         <h5>{{task.description}}</h5>
                     </div>
-                    <div>
-                        <!-- <a href="{% url 'task-update' task.id %}" class="operations">Edit</a> -->
-                        <a href="{% url 'task-delete' task.id %}" class="operations">&#215;</a>
-                    </div>
                 </div>
-                {% endif %}
             </div>
             {% empty %}
             <h4>No items in list</h4>

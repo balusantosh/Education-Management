@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.http import request
 from django.shortcuts import redirect, render
-from .models import Task
+from .models import Complaint, Notification, Task
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView 
@@ -10,6 +10,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login
+
+
 
 
 class CustomLoginView(LoginView):
@@ -27,6 +29,9 @@ class RegisterPage(FormView):
     redirect_authenticated_user = True
     success_url = reverse_lazy('tasks')
 
+
+
+
     def form_valid(self, form):
         user = form.save()
         if user is not None:
@@ -41,13 +46,12 @@ class RegisterPage(FormView):
 
 
 class TaskList(LoginRequiredMixin, ListView):
-    model = Task
+    model = Notification
     context_object_name = 'tasks'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tasks'] = context['tasks'].filter(user=self.request.user)
-        context['count'] = context['tasks'].filter(complete=False).count()
+        context['tasks'] = context['tasks']
 
         search_input = self.request.GET.get('search-area') or ''
         if search_input:
@@ -63,8 +67,8 @@ class TaskDetail(LoginRequiredMixin, DetailView):
 
 
 class TaskCreate(LoginRequiredMixin, CreateView):
-    model = Task
-    fields = ['title', 'description', 'complete']
+    model = Complaint
+    fields = ['title', 'description']
     success_url = reverse_lazy('tasks')
 
     def form_valid(self, form):
